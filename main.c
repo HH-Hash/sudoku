@@ -86,20 +86,20 @@ int check_answer() {
 
 }
 
-void game_status(){
+int game_status(){
     //pelin tilanne chekataan täällä voitto tai häviö
     //tarkista onko liikaa vääriä arvauksia jolloin häviö
-        if(guesses < 26){   
+    if(guesses < 26){   
     //jos ratkaisu valmis eli grid täynnä, voitto
-    for(int i = 0; i<N; i++){
-        for (int j=0; j<N; j++){
-            if(solvable_grid[i][j]!=0){
-                continue;
-            }else{
-                return win;
+        for(int i = 0; i<N; i++){
+            for (int j=0; j<N; j++){
+                if(solvable_grid[i][j]!=0){
+                    continue;
+                }else{
+                    return win;
+                }
             }
         }
-    }
     }else{
         game_over = 1;
         return game_over;
