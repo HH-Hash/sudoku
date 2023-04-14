@@ -77,7 +77,7 @@ void convert_grids() {
 }
 
 // Tarkistaa onko käyttäjän syöte oikea
-int check_answer(int row, int col, int value) {
+void check_answer(int row, int col, int value) {
    if(solution_grid[row][col] == value) {
        solvable_grid[row][col] = value;
    } else {
@@ -136,8 +136,8 @@ void game() {
     win = 0;   
     while(!game_over && !win) {
         //peli pyörii täällä eli siirretään pelin logiikka tänne
-        print_grid();
         game_status();
+        print_grid();
         insert_grid();
     }
 }
