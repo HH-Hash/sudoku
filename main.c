@@ -11,6 +11,7 @@ int game_over;
 int win;
 int solvable_grid[N][N];
 int solution_grid[N][N];
+int guesses;
 void convert_grids();
 
 
@@ -81,12 +82,27 @@ void insert_grid() {
 
 }
 
-void check_answer() {
+int check_answer() {
 
 }
 
 void game_status(){
     //pelin tilanne chekataan täällä voitto tai häviö
+    //tarkista onko liikaa vääriä arvauksia jolloin häviö
+        if(guesses < 26){   
+    //jos ratkaisu valmis eli grid täynnä, voitto
+    for(int i = 0; i<N; i++){
+        for (int j=0; j<N; j++){
+            if(solvable_grid[i][j]!=0){
+                continue;
+            }else{
+                return win;
+            }
+        }
+    }
+    }
+win = 1;
+return win;
 }
 
 void game(){
