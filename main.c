@@ -11,9 +11,7 @@ int game_over;
 int win;
 int solvable_grid[N][N];
 int solution_grid[N][N];
-int guesses;
-void convert_grids();
-
+int guesses = 10;
 
 void choose_sudoku() {
     FILE* fp = fopen("sudokus.csv", "r");
@@ -50,6 +48,7 @@ void choose_sudoku() {
 
 // Tulostetaan sudoku
 void print_grid() {
+    printf("Jäljellä olevat arvaukset: %d\n", guesses);
     int colum = 1;
     printf("\t");
     for(int i=1; i<=9; i++) {
@@ -67,7 +66,6 @@ void print_grid() {
     }
 }
 
-
 // Muutetaan yksiulotteiset arrayt ongelma ja ratkaisu kaksiuloitteiseksi 
 void convert_grids() {
     for (int i = 0; i < N; i++) {
@@ -78,52 +76,77 @@ void convert_grids() {
     }
 }
 
+// Tarkistaa onko käyttäjän syöte oikea
+int check_answer(int row, int col, int value) {
+   if(solution_grid[row][col] == value) {
+       solvable_grid[row][col] = value;
+   } else {
+       guesses--;
+       printf("Väärä numero!\n");
+   }
+}
+
+// Käyttäjän syöte
 void insert_grid() {
-
+    int row;
+    int col;
+    int value;
+    
+    printf("Syötä rivi: ");
+    fflush( stdout );
+    scanf("%d", &row);
+    printf("Syötä sarake: ");
+    fflush( stdout );
+    scanf("%d", &col);
+    printf("Syötä luku: ");
+    fflush( stdout );
+    scanf("%d", &value);
+    fflush( stdout );
+    row--;
+    col--;
+    check_answer(row, col, value);
 }
 
-int check_answer() {
-
-}
-
-void game_status(){
+// Pelin tilan tarkistus
+int game_status() {
     //pelin tilanne chekataan täällä voitto tai häviö
     //tarkista onko liikaa vääriä arvauksia jolloin häviö
-        if(guesses < 26){   
+    if(guesses > 0) {   
     //jos ratkaisu valmis eli grid täynnä, voitto
-    for(int i = 0; i<N; i++){
-        for (int j=0; j<N; j++){
-            if(solvable_grid[i][j]!=0){
-                continue;
-            }else{
-                return win;
+        for(int i = 0; i<N; i++) {
+            for (int j=0; j<N; j++) {
+                if(solvable_grid[i][j]!=0) {
+                    continue;
+                } else {
+                    return win;
+                }
             }
         }
-    }
-    }else{
+    } else {
         game_over = 1;
         return game_over;
     }
-win = 1;
-return win;
+    win = 1;
+    return win;
 }
 
-void game(){
+// Peli-loop
+void game() {
     game_over = 0;
     win = 0;   
-    while(!game_over || !win){
+    while(!game_over && !win) {
         //peli pyörii täällä eli siirretään pelin logiikka tänne
         print_grid();
-        insert_grid();
         game_status();
+        insert_grid();
     }
-
 }
 
 int main() {
     choose_sudoku();
     convert_grids();
-    print_grid();
+    game();
     return 0;
 }
+
 
