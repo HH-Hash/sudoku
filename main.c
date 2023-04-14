@@ -7,8 +7,12 @@
 
 char solvable_sudoku[1024];
 char solution_sudoku[1024];
-int grid[N][N];
-void generate_puzzle();
+int game_over;
+int win;
+int solvable_grid[N][N];
+int solution_grid[N][N];
+void convert_grids();
+
 
 void choose_sudoku() {
     FILE* fp = fopen("sudokus.csv", "r");
@@ -43,18 +47,19 @@ void choose_sudoku() {
     }
 }
 
+// Tulostetaan sudoku
 void print_grid() {
-    int columNum = 1;
+    int colum = 1;
     printf("\t");
     for(int i=1; i<=9; i++) {
         printf("%d ", i);
     }
     printf("\n\n");
     for (int i = 0; i < N; i++) {
-        printf("%d\t", columNum);
-        columNum++;
+        printf("%d\t", colum);
+        colum++;
         for (int j = 0; j < N; j++) {                        
-            printf("%d ", grid[i][j]);
+            printf("%d ", solvable_grid[i][j]);
             
         }
         printf("\n");
@@ -62,26 +67,43 @@ void print_grid() {
 }
 
 
-
-void generate_puzzle(char user_input[]) {
-    // Initialize grid with all 0s
+// Muutetaan yksiulotteiset arrayt ongelma ja ratkaisu kaksiuloitteiseksi 
+void convert_grids() {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            grid[i][j] = user_input[i*N+j] - '0'; // convert character to integer
+            solvable_grid[i][j] = solvable_sudoku[i*N+j] - '0';
+            solution_grid[i][j] = solution_sudoku[i*N+j] - '0';
         }
     }
-
 }
 
+void insert_grid() {
 
+}
 
 void check_answer() {
 
 }
 
+void game_status(){
+    //pelin tilanne chekataan täällä voitto tai häviö
+}
+
+void game(){
+    game_over = 0;
+    win = 0;   
+    while(!game_over || !win){
+        //peli pyörii täällä eli siirretään pelin logiikka tänne
+        print_grid();
+        insert_grid();
+        game_status();
+    }
+
+}
+
 int main() {
     choose_sudoku();
-    generate_puzzle(solvable_sudoku);
+    convert_grids();
     print_grid();
     return 0;
 }
