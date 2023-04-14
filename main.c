@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string.h>
 
+
 #define N 9
 
 char solvable_sudoku[1024];
@@ -12,6 +13,7 @@ int win;
 int solvable_grid[N][N];
 int solution_grid[N][N];
 int guesses = 10;
+int erotin = 1; 
 
 void choose_sudoku() {
     FILE* fp = fopen("sudokus.csv", "r");
@@ -48,19 +50,20 @@ void choose_sudoku() {
 
 // Tulostetaan sudoku
 void print_grid() {
-    printf("Jäljellä olevat arvaukset: %d\n", guesses);
+    printf("\n\nJäljellä olevat arvaukset: \e[1m%d\e[m\n\n", guesses);
     int colum = 1;
-    printf("\t");
+    printf("   ");
     for(int i=1; i<=9; i++) {
-        printf("%d ", i);
+        printf("\e[1m%d\e[m ", i);
     }
-    printf("\n\n");
+    printf("\n");
+    printf("=====================\n");
     for (int i = 0; i < N; i++) {
-        printf("%d\t", colum);
+        printf("\e[1m%d||\e[m", colum);
         colum++;
-        for (int j = 0; j < N; j++) {                        
-            printf("%d ", solvable_grid[i][j]);
-            
+        for (int j = 0; j < N; j++) {
+                    
+            printf("\e[4m%d|\e[0m", solvable_grid[i][j]);
         }
         printf("\n");
     }
@@ -85,6 +88,7 @@ void check_answer(int row, int col, int value) {
        printf("Väärä numero!\n");
    }
 }
+
 
 // Käyttäjän syöte
 void insert_grid() {
