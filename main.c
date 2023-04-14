@@ -100,6 +100,9 @@ void game_status(){
             }
         }
     }
+    }else{
+        game_over = 1;
+        return game_over;
     }
 win = 1;
 return win;
