@@ -3,17 +3,30 @@
 #include <time.h>
 #include <string.h>
 
-
 #define N 9
 
 char solvable_sudoku[1024];
 char solution_sudoku[1024];
-int game_over;
-int win;
 int solvable_grid[N][N];
 int solution_grid[N][N];
+int game_over;
+int win;
 int guesses = 10;
-int erotin = 1; 
+
+void choose_sudoku();
+void print_grid();
+void check_answer();
+void insert_grid();
+void convert_grids();
+int game_status();
+void game();
+
+int main() {
+    choose_sudoku();
+    convert_grids();
+    game();
+    return 0;
+}
 
 void choose_sudoku() {
     FILE* fp = fopen("sudokus.csv", "r");
@@ -57,16 +70,16 @@ void print_grid() {
         printf("\e[1m%d\e[m ", i);
     }
     printf("\n");
-    printf("=====================\n");
+    printf("   __________________\n");
     for (int i = 0; i < N; i++) {
-        printf("\e[1m%d||\e[m", colum);
+        printf("\e[1m%d |\e[m", colum);
         colum++;
         for (int j = 0; j < N; j++) {
-                    
             printf("\e[4m%d|\e[0m", solvable_grid[i][j]);
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 // Muutetaan yksiulotteiset arrayt ongelma ja ratkaisu kaksiuloitteiseksi 
@@ -81,9 +94,14 @@ void convert_grids() {
 
 // Tarkistaa onko käyttäjän syöte oikea
 void check_answer(int row, int col, int value) {
+    if(solvable_grid[row][col] != 0) {
+       printf("Ruudussa on jo numero!\n");
+       insert_grid();
+   }
    if(solution_grid[row][col] == value) {
        solvable_grid[row][col] = value;
-   } else {
+   }
+      else {
        guesses--;
        printf("Väärä numero!\n");
    }
@@ -96,19 +114,22 @@ void insert_grid() {
     int col;
     int value;
     
-    printf("Syötä rivi: ");
+    printf("Syötä rivi ja sarake:\n");
     fflush( stdout );
-    scanf("%d", &row);
-    printf("Syötä sarake: ");
-    fflush( stdout );
-    scanf("%d", &col);
+    if(!scanf("%d%d", &row, &col)) {
+        scanf("%*[^\n]");
+        printf("Syötä numero!\n");
+        insert_grid();
+    }
     printf("Syötä luku: ");
     fflush( stdout );
-    scanf("%d", &value);
+    if(!scanf("%d", &value)) {
+        scanf("%*[^\n]");
+        printf("Syötä numero!\n");
+        insert_grid();
+    }
     fflush( stdout );
-    row--;
-    col--;
-    check_answer(row, col, value);
+    check_answer(--row, --col, value);
 }
 
 // Pelin tilan tarkistus
@@ -139,18 +160,11 @@ void game() {
     game_over = 0;
     win = 0;   
     while(!game_over && !win) {
-        //peli pyörii täällä eli siirretään pelin logiikka tänne
         game_status();
         print_grid();
         insert_grid();
     }
 }
 
-int main() {
-    choose_sudoku();
-    convert_grids();
-    game();
-    return 0;
-}
 
 
