@@ -21,23 +21,27 @@ void convert_grids();
 int game_status();
 void game();
 
-int main() {
+int main() 
+{
     choose_sudoku();
     convert_grids();
     game();
     return 0;
 }
-
-void choose_sudoku() {
+//Valitsee sudokun ja sen ratkaisun databasesta (sudokus.csv)
+void choose_sudoku()
+{
     FILE* fp = fopen("sudokus.csv", "r");
-    if (fp == NULL) {
+    if (fp == NULL)
+    {
         printf("Sudokun nouto epäonnistui");
         return;
     }
     
     int num_rows = 0;
     char line[1024];
-    while (fgets(line, 1024, fp) != NULL) {
+    while (fgets(line, 1024, fp) != NULL)
+    {
         num_rows++;
     }
    
@@ -49,32 +53,38 @@ void choose_sudoku() {
     fseek(fp, 0, SEEK_SET);
 
     // Iteroidaan kunnes saavutetaan valittu satunnainen rivi 
-    for (int i = 0; i < random_index; i++) {
+    for (int i = 0; i < random_index; i++)
+    {
         fgets(line, 1024, fp);
     }
-    if (fgets(line, 1024, fp) != NULL) {
+    if (fgets(line, 1024, fp) != NULL)
+    {
         char* token = strtok(line, ",");
         strncpy(solvable_sudoku, token, 1024);
         token = strtok(NULL, ",");
         strncpy(solution_sudoku, token, 1024);
-        printf("random rivi:\npöytä=%s\nratkaisu=%s\n", solvable_sudoku, solution_sudoku);
+        printf("random rivi:\npöytä=%s\nratkaisu=%s", solvable_sudoku, solution_sudoku);
     }
 }
 
 // Tulostetaan sudoku
-void print_grid() {
-    printf("\n\nJäljellä olevat arvaukset: \e[1m%d\e[m\n\n", guesses);
+void print_grid()
+{
+    printf("\nJäljellä olevat arvaukset: \e[1m%d\e[m\n\n", guesses);
     int colum = 1;
     printf("   ");
-    for(int i=1; i<=9; i++) {
+    for(int i=1; i<=9; i++)
+    {
         printf("\e[1m%d\e[m ", i);
     }
     printf("\n");
     printf("   __________________\n");
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) 
+    {
         printf("\e[1m%d |\e[m", colum);
         colum++;
-        for (int j = 0; j < N; j++) {
+        for (int j = 0; j < N; j++)
+        {
             printf("\e[4m%d|\e[0m", solvable_grid[i][j]);
         }
         printf("\n");
@@ -83,9 +93,12 @@ void print_grid() {
 }
 
 // Muutetaan yksiulotteiset arrayt ongelma ja ratkaisu kaksiuloitteiseksi 
-void convert_grids() {
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
+void convert_grids() 
+{
+    for (int i = 0; i < N; i++) 
+    {
+        for (int j = 0; j < N; j++) 
+        {
             solvable_grid[i][j] = solvable_sudoku[i*N+j] - '0';
             solution_grid[i][j] = solution_sudoku[i*N+j] - '0';
         }
@@ -93,37 +106,44 @@ void convert_grids() {
 }
 
 // Tarkistaa onko käyttäjän syöte oikea
-void check_answer(int row, int col, int value) {
-    if(solvable_grid[row][col] != 0) {
+void check_answer(int row, int col, int value)
+{
+    if(solvable_grid[row][col] != 0)
+    {
        printf("Ruudussa on jo numero!\n");
        insert_grid();
-   }
-   if(solution_grid[row][col] == value) {
+    }
+    if(solution_grid[row][col] == value)
+    {
        solvable_grid[row][col] = value;
-   }
-      else {
+    }
+    else
+    {
        guesses--;
        printf("Väärä numero!\n");
-   }
+    }
 }
 
 
 // Käyttäjän syöte
-void insert_grid() {
+void insert_grid()
+{
     int row;
     int col;
     int value;
     
     printf("Syötä rivi ja sarake:\n");
     fflush( stdout );
-    if(!scanf("%d%d", &row, &col)) {
+    if(!scanf("%d%d", &row, &col)) 
+    {
         scanf("%*[^\n]");
         printf("Syötä numero!\n");
         insert_grid();
     }
     printf("Syötä luku: ");
     fflush( stdout );
-    if(!scanf("%d", &value)) {
+    if(!scanf("%d", &value)) 
+    {
         scanf("%*[^\n]");
         printf("Syötä numero!\n");
         insert_grid();
@@ -133,21 +153,29 @@ void insert_grid() {
 }
 
 // Pelin tilan tarkistus
-int game_status() {
-    //pelin tilanne chekataan täällä voitto tai häviö
-    //tarkista onko liikaa vääriä arvauksia jolloin häviö
-    if(guesses > 0) {   
-    //jos ratkaisu valmis eli grid täynnä, voitto
-        for(int i = 0; i<N; i++) {
-            for (int j=0; j<N; j++) {
-                if(solvable_grid[i][j]!=0) {
+int game_status()
+{
+    //Tarkista onko liikaa vääriä arvauksia --> häviö
+    if(guesses > 0)
+    {   
+    //Jos ratkaisu valmis eli grid täynnä --> voitto
+        for(int i = 0; i<N; i++)
+        {
+            for (int j=0; j<N; j++)
+            {
+                if(solvable_grid[i][j]!=0) 
+                {
                     continue;
-                } else {
+                }
+                else 
+                {
                     return win;
                 }
             }
         }
-    } else {
+    }
+    else
+    {
         game_over = 1;
         return game_over;
     }
@@ -156,10 +184,12 @@ int game_status() {
 }
 
 // Peli-loop
-void game() {
+void game()
+{
     game_over = 0;
     win = 0;   
-    while(!game_over && !win) {
+    while(!game_over && !win)
+    {
         game_status();
         print_grid();
         insert_grid();
