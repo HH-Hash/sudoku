@@ -72,20 +72,61 @@ void print_grid()
 {
     printf("\nJäljellä olevat arvaukset: \e[1m%d\e[m\n\n", guesses);
     int colum = 1;
+    int grid_calc=0; // tarvitaan 3x3 grid sivujen tummentamiseen
+    int horiz_calc=0; // tarvitaan 3x3 grid pohjien tekemiseen
     printf("   ");
     for(int i=1; i<=9; i++)
     {
-        printf("\e[1m%d\e[m ", i);
+        if(i==1)
+        {
+            printf(" ");
+        }
+        if(i < 4)
+        {
+            printf("\e[1m%d\e[m ", i);
+        }
+        if(i==3)
+        {
+            printf(" ");
+        }
+        if(i >= 4 && i < 7)
+        {
+            printf("\e[1m%d\e[m ", i);
+        }
+        if(i==6)
+        {
+            printf(" ");
+        }
+        if(i >= 7 && i < 10)
+        {
+            printf("\e[1m%d\e[m ", i);
+        }
+
+        
     }
     printf("\n");
-    printf("   __________________\n");
+    //printf("    ____________________\n");
     for (int i = 0; i < N; i++) 
     {
-        printf("\e[1m%d |\e[m", colum);
+        
+        if(horiz_calc % 3 == 0){
+            printf("    ___________________\n");
+        }
+        horiz_calc++;
+        printf("\e[1m%d ||\e[m", colum);
         colum++;
         for (int j = 0; j < N; j++)
         {
-            printf("\e[4m%d|\e[0m", solvable_grid[i][j]);
+            grid_calc++;
+            printf("\e[4m%d\e[0m", solvable_grid[i][j]);
+            if(grid_calc % 3 == 0)
+            {
+                printf("\e[1m||\e[m");
+            }
+            else
+            {
+                printf("|");
+            }
         }
         printf("\n");
     }
