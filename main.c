@@ -154,17 +154,18 @@ void check_answer(int row, int col, int value)
        printf("Ruudussa on jo numero!\n");
        insert_grid();
     }
-    if(solution_grid[row][col] == value)
-    {
-       solvable_grid[row][col] = value;
-    }
-    else
+
+    else if(solution_grid[row][col] != value)
     {
        guesses--;
        printf("Väärä numero!\n");
     }
-}
 
+    else
+    {
+        solvable_grid[row][col] = value;
+    }
+}
 
 // Käyttäjän syöte
 void insert_grid()
