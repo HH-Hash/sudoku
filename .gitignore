@@ -2,3 +2,5 @@ Makefile
 sudoku.exe
 sudokus.csv
 main
+.vscode
+sudoku
